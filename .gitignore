@@ -172,3 +172,10 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
+
+
+txt
+__pycache__/
+*.pyc
+.streamlit/secrets.toml
+.env
