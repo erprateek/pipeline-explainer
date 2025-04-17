@@ -13,5 +13,5 @@ This app takes a shell, Snakemake, or Nextflow pipeline script and uses an LLM t
 git clone https://github.com/YOUR_USERNAME/pipeline-explainer-app.git
 cd pipeline-explainer-app
 pip install -r requirements.txt
-
+```
 ![screenshot](imgs/screenshot.png)
