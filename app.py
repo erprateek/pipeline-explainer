@@ -22,6 +22,7 @@ def explain_code_block(code_block):
             }
         }
     )
+    print(response.json())
 
     result = response.json()
     return result[0]["generated_text"].strip() if isinstance(result, list) else "No response or model loading..."
