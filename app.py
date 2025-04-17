@@ -5,7 +5,26 @@ import openai
 from pathlib import Path
 
 # === CONFIG ===
-openai.api_key = st.secrets["OPENAI_API_KEY"]
+import requests
+
+def explain_code_block(code_block):
+    prompt = f"Explain the following bioinformatics code to a junior scientist:\n\n{code_block}\n\nExplanation:"
+
+    response = requests.post(
+        "https://api-inference.huggingface.co/models/mistralai/Mixtral-8x7B-Instruct-v0.1",
+        headers={"Authorization": f"Bearer " + st.secrets["HF_API_KEY"]},
+        json={
+            "inputs": prompt,
+            "parameters": {
+                "temperature": 0.3,
+                "max_new_tokens": 512,
+                "return_full_text": False
+            }
+        }
+    )
+
+    result = response.json()
+    return result[0]["generated_text"].strip() if isinstance(result, list) else "No response or model loading..."
 
 # === HELPER FUNCTIONS ===
 def split_script_into_blocks(script_text):
@@ -26,24 +45,6 @@ def split_script_into_blocks(script_text):
     if current_block:
         blocks.append("\n".join(current_block))
     return blocks
-
-
-def explain_code_block(code_block):
-    """Call OpenAI to explain the code block."""
-    prompt = f"""
-You are a senior bioinformatics scientist.
-Explain the following code block to a junior scientist in plain English.
-Include relevant tools, inputs/outputs, and what it accomplishes.
-
-Code block:
-"""
-    prompt += code_block
-    response = openai.ChatCompletion.create(
-        model="gpt-4-turbo",
-        messages=[{"role": "user", "content": prompt}],
-        temperature=0.3
-    )
-    return response.choices[0].message.content.strip()
 
 
 # === STREAMLIT UI ===
